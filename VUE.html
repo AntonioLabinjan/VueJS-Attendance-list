@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js College Attendance List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #app {
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button.edit {
+            background-color: #2196F3;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>College Attendance List</h1>
+        <input v-model="newStudent" @keyup.enter="addStudent" placeholder="Add a new student">
+        <ul>
+            <li v-for="(student, index) in studentList" :key="index">
+                {{ student.name }}
+                <button class="edit" @click="editStudent(index)">Edit</button>
+                <button @click="deleteStudent(index)">Delete</button>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                newStudent: '',
+                studentList: [],
+                editingIndex: -1,
+                editingStudent: ''
+            },
+            methods: {
+                addStudent() {
+                    if (this.newStudent.trim() !== '') {
+                        if (this.editingIndex !== -1) {
+                            this.studentList[this.editingIndex].name = this.newStudent;
+                        } else {
+                            this.studentList.push({ name: this.newStudent });
+                        }
+                        this.newStudent = '';
+                        this.editingIndex = -1;
+                    }
+                },
+                editStudent(index) {
+                    this.editingIndex = index;
+                    this.newStudent = this.studentList[index].name;
+                },
+                deleteStudent(index) {
+                    this.studentList.splice(index, 1);
+                    if (this.editingIndex === index) {
+                        this.newStudent = '';
+                        this.editingIndex = -1;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
